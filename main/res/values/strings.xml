@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Money Manager</string>
+    <string name="add_data"> Add Data </string>
+    <string name="show_data"> Show Data </string>
+    <string name="app_title"> Expense Manager </string>
+    <string name="item_name"> Item Name </string>
+    <string name="item_cost"> Item Cost </string>
+    <string name="item_category"> Item Category </string>
 </resources>

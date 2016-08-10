@@ -1,15 +1,26 @@
 package siddhant.curositylabs.moneymanager;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class DisplayData extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     DatabaseHandler mydb;
     String item_name,item_cost,item_category,item_date;
-    TextView item_name_textview,item_cost_textview,item_category_textview,item_date_textview;
+    List<String> itemNamesList;
+    ArrayList itemDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,30 +28,64 @@ public class DisplayData extends AppCompatActivity {
         setContentView(R.layout.activity_display_data);
         mydb = new DatabaseHandler(this);
 
+        itemNamesList = new ArrayList<String>();
+        itemDetails = new ArrayList();
 
         // cursor starts from index -1 or so the error says and hence it movetonext is a must
-        // as by current understanding the c is contains the row number and coloumns are being called voa getColoumnIndex
+        // as by current understanding the c is contains the row number and coloumns are being called via getColoumnIndex
 
 
         Cursor c = mydb.getData();
-        c.moveToNext();
+
+        while(c.moveToNext()) {
 
 
-        item_name = c.getString(c.getColumnIndex("item"));
-        item_cost = c.getString(c.getColumnIndex("cost"));
-        item_category = c.getString(c.getColumnIndex("category"));
-        item_date = c.getString(c.getColumnIndex("date"));
+            item_name = c.getString(c.getColumnIndex("item"));
 
-        item_name_textview = (TextView)findViewById(R.id.item_name_show);
-        item_cost_textview = (TextView)findViewById(R.id.item_price_show);
-        item_category_textview = (TextView)findViewById(R.id.item_category_show);
-        item_date_textview = (TextView)findViewById(R.id.item_date_show);
+            itemNamesList.add(item_name);
 
-        item_name_textview.setText(item_name);
-        item_cost_textview.setText(item_cost);
-        item_category_textview.setText(item_category);
-        item_date_textview.setText(item_date);
+            item_cost = c.getString(c.getColumnIndex("cost"));
+            item_category = c.getString(c.getColumnIndex("category"));
+            item_date = c.getString(c.getColumnIndex("date"));
+
+
+            ItemDetails itobj = new ItemDetails();
+            itobj.setItemName(item_name);
+            itobj.setDate(item_date);
+            itobj.setItemCategory(item_category);
+            itobj.setItemCost(item_cost);
+
+            itemDetails.add(itobj);
+
+
+        }
+
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.activity_list_display_data, itemNamesList);
+        ListView listView = (ListView) findViewById(R.id.data_list);
+        listView.setOnItemClickListener(this);
+        listView.setAdapter(adapter);
+
+
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(getApplicationContext(), "Clicked "+ itemNamesList.get(position), Toast.LENGTH_SHORT).show();
+
+        ItemDetails specific_detail = (ItemDetails) itemDetails.get(position);
+
+        Intent showDetails = new Intent(this, showDetailsItem.class);
+
+        Bundle dataBundle = new Bundle();
+        dataBundle.putString("ItemName", specific_detail.getItemName());
+        dataBundle.putString("ItemCost", specific_detail.getItemCost());
+        dataBundle.putString("ItemCategory", specific_detail.getItemCategory());
+        dataBundle.putString("ItemDate", specific_detail.getDate());
+
+        showDetails.putExtras(dataBundle);
+
+        startActivity(showDetails);
+    }
 }

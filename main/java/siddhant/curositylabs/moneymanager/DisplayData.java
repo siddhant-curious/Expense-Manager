@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -69,6 +70,9 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             item_category = c.getString(c.getColumnIndex("category"));
             item_date = c.getString(c.getColumnIndex("date"));
 
+
+
+            // String dateTimeAsString = new DateTime( item_date1 * 1000, DateTimeZone.UTC ).toString();
 
             ItemDetails itobj = new ItemDetails();
             itobj.setItemName(item_name);

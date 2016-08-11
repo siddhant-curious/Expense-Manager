@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Date;
+import java.util.Date;
+
+
 
 /* SQLiteOpenHelper class is somehow supposed to help in creating databases;
  * no idea how's that gonna work out  */
@@ -25,13 +27,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME , null, 1);
     }
 
-    /* onCreate is supposed to run only once */
+    /* onCreate is supposed to run only once and I don't know why lol */
     @Override
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table " + TABLE_NAME +
-                        " (id integer primary key autoincrement not null, item text,cost integer,category text,date text)"
+                        " (id integer primary key autoincrement not null, item text,cost integer,category text,date long)"
         );
 
 
@@ -52,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         contentValues.put("item", item);
         contentValues.put("cost", cost);
         contentValues.put("category", category);
-        contentValues.put("date", date);
+        contentValues.put("date", new Date().getTime());
         db.insert(TABLE_NAME, null, contentValues);
         return true;
     }

@@ -15,17 +15,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     DatabaseHandler mydb;
-    String item_name,item_cost,item_category,item_date;
+    String item_name,item_cost,item_category;
     List<String> itemNamesList;
     ArrayList itemDetails;
+    Long item_date;
 
     private DatePicker datePicker;
     private Calendar calendar;
@@ -68,15 +72,18 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
 
             item_cost = c.getString(c.getColumnIndex("cost"));
             item_category = c.getString(c.getColumnIndex("category"));
-            item_date = c.getString(c.getColumnIndex("date"));
+            item_date = c.getLong(c.getColumnIndex("date"));
 
 
 
-            // String dateTimeAsString = new DateTime( item_date1 * 1000, DateTimeZone.UTC ).toString();
+            Date date = new Date(item_date);
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            //format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+            String formatted = format.format(date);
 
             ItemDetails itobj = new ItemDetails();
             itobj.setItemName(item_name);
-            itobj.setDate(item_date);
+            itobj.setDate(formatted);
             itobj.setItemCategory(item_category);
             itobj.setItemCost(item_cost);
 
@@ -122,8 +129,9 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     @SuppressWarnings("deprecation")
     public void setDate(View view) {
         showDialog(999);
-        Toast.makeText(getApplicationContext(), "ca", Toast.LENGTH_SHORT)
+        Toast.makeText(getApplicationContext(), "yo bitch", Toast.LENGTH_SHORT)
                 .show();
+
     }
 
     @Override

@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(k);
     }
 
+    public void deleteData(View v)
+    {
+        myDB.deleteTable();
+    }
+
 
 
 }

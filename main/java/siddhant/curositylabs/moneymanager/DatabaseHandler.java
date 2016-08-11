@@ -46,7 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String item, Integer cost,String category,String date)
+    public boolean insertData(String item, Integer cost,String category)
     {
         // id should auto increment
         SQLiteDatabase db = this.getWritableDatabase();
@@ -63,6 +63,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + TABLE_NAME, null );
         return res;
+    }
+
+    public Cursor getData(Long da){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " + TABLE_NAME, null );
+        return res;
+    }
+
+    public boolean deleteTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        //db.execSQL("DELETE * FROM " + TABLE_NAME);
+        return true;
+
     }
 
 

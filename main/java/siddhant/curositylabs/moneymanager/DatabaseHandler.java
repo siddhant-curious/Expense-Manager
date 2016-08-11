@@ -67,14 +67,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public Cursor getData(Long da){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + TABLE_NAME, null );
+        Long miliSecondsInOneDay = Long.valueOf(86400000);
+        Long endTime = da + miliSecondsInOneDay;
+        Cursor res =  db.rawQuery( "select * from " + TABLE_NAME + " where date between " + da + " and " +endTime, null );
         return res;
     }
 
     public boolean deleteTable(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
-        //db.execSQL("DELETE * FROM " + TABLE_NAME);
         return true;
 
     }

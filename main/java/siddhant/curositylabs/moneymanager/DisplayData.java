@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,60 +34,90 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     ArrayList itemDetails;
     Long item_date;
 
-    private DatePicker datePicker;
+
     private Calendar calendar;
-    private TextView dateView;
-    private int year, month, day;
+    public TextView dateView;
+    public int year, month, day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
 
+        // using dateView as both the click and show
         dateView = (TextView) findViewById(R.id.editDate);
+
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        //initial call to show current day values
+        getDateAction(year,month,day);
+
+
+
+
+    }
+
+    public void getDateAction(int year,int month,int day) {
+
         showDate(year, month+1, day);
+        String str = "" + (month+1) + " " + day + " " + year + " 0:0:0.0 UTC";
+        SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy HH:mm:ss.SSS zzz");
+        Date date1 =null;
+        try {
+            date1 = df.parse(str);
 
-
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long epoch = date1.getTime();
+        Log.i("hello wow", String.valueOf(epoch));
 
 
         mydb = new DatabaseHandler(this);
-
         itemNamesList = new ArrayList<String>();
         itemDetails = new ArrayList();
 
+        populateList(epoch);
+
+
+    }
+
+
+    public void populateList(Long epoch)
+    {
         // cursor starts from index -1 or so the error says and hence it movetonext is a must
         // as by current understanding the c is contains the row number and coloumns are being called via getColoumnIndex
-
-
-        Cursor c = mydb.getData();
+        Cursor c = mydb.getData(epoch);
 
         while(c.moveToNext()) {
 
 
             item_name = c.getString(c.getColumnIndex("item"));
 
+            // to show only the names in the list view
             itemNamesList.add(item_name);
 
+            // getting rest of the data from database
             item_cost = c.getString(c.getColumnIndex("cost"));
             item_category = c.getString(c.getColumnIndex("category"));
             item_date = c.getLong(c.getColumnIndex("date"));
 
-
-
+            String temp = String.valueOf(item_date);
+            // item_date contains the epoch time
+            // need to convert the epoch time to string
             Date date = new Date(item_date);
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            //format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+            //format.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); if need to set a specific time
             String formatted = format.format(date);
 
+            // passing all the details to a class (custom data structure) like struct
             ItemDetails itobj = new ItemDetails();
             itobj.setItemName(item_name);
             itobj.setDate(formatted);
-            itobj.setItemCategory(item_category);
+            itobj.setItemCategory(temp);
             itobj.setItemCost(item_cost);
 
             itemDetails.add(itobj);
@@ -97,10 +130,14 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         ListView listView = (ListView) findViewById(R.id.data_list);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
-
-
-
     }
+
+
+
+
+
+
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -126,31 +163,11 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
                 .append(month).append("/").append(year));
     }
 
-    @SuppressWarnings("deprecation")
-    public void setDate(View view) {
-        showDialog(999);
-        Toast.makeText(getApplicationContext(), "yo bitch", Toast.LENGTH_SHORT)
-                .show();
-
+    public void setDate(View view)
+    {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+        Toast.makeText(getApplicationContext(),"Hello",Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        if (id == 999) {
-            return new DatePickerDialog(this, myDateListener, year, month, day);
-        }
-        return null;
-    }
-
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
-            // arg1 = year
-            // arg2 = month
-            // arg3 = day
-            showDate(arg1, arg2+1, arg3);
-        }
-    };
 }

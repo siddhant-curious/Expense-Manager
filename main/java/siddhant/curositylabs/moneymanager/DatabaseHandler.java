@@ -70,7 +70,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Long miliSecondsInOneDay = Long.valueOf(86400000);
         Long endTime = da + miliSecondsInOneDay;
         Cursor res =  db.rawQuery( "select * from " + TABLE_NAME + " where date between " + da + " and " +endTime, null );
+        //db.close();
         return res;
+
     }
 
     public boolean deleteTable(){

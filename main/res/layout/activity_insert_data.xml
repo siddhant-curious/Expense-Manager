@@ -23,6 +23,7 @@
             android:layout_height="wrap_content" />
 
         <EditText
+
             android:layout_margin="15dp"
             android:textSize="22dp"
             android:inputType="text"

@@ -15,7 +15,7 @@ public class InsertData extends AppCompatActivity {
     EditText item_name_input, item_cost_input, item_category_input;
     DatabaseHandler mydb;
     String item_name,item_category;
-    Integer item_cost;
+    Float item_cost;
     boolean status;
 
     @Override
@@ -27,7 +27,7 @@ public class InsertData extends AppCompatActivity {
 
     }
 
-    public void insertItem(View v)
+    public boolean insertItem(View v)
     {
         item_name_input = (EditText)findViewById(R.id.input_name);
         item_cost_input = (EditText)findViewById(R.id.input_cost);
@@ -36,11 +36,29 @@ public class InsertData extends AppCompatActivity {
 //        Date date_input = new Date();
 //        insert_date = date_input.toString();
 
+
+
         item_name =item_name_input.getText().toString();
+        if(item_name.trim().equals("")){
+            item_name_input.setError("Required Field");
+            return false;
+
+        }
         item_category = item_category_input.getText().toString();
-        item_cost = Integer.parseInt(item_cost_input.getText().toString());
+        if(item_category.trim().equals("")){
+            item_category_input.setError("Required Field");
+            return false;
+        }
+
+        if(item_cost_input.getText().toString().trim().equals("")){
+            item_cost_input.setError("Required Field");
+            return false;
+        }
+
+        item_cost = Float.parseFloat(item_cost_input.getText().toString());
 
         status=mydb.insertData(item_name, item_cost, item_category);
+
         if(status==true)
         {
             Toast.makeText(getApplicationContext(),"Item Added",Toast.LENGTH_SHORT).show();
@@ -52,6 +70,6 @@ public class InsertData extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Error! Item Couldn't be added",Toast.LENGTH_SHORT).show();
         }
 
-
+        return true;
     }
 }

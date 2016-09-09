@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Money Manager</string>
+    <string name="app_name">Expense Manager</string>
     <string name="add_data"> Add Data </string>
     <string name="show_data"> Show Data </string>
     <string name="app_title"> Expense Manager </string>

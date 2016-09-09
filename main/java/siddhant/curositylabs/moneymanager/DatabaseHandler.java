@@ -33,7 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table " + TABLE_NAME +
-                        " (id integer primary key autoincrement not null, item text,cost integer,category text,date long)"
+                        " (id integer primary key autoincrement not null, item text,cost real,category text,date long)"
         );
 
 
@@ -46,7 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String item, Integer cost,String category)
+    public boolean insertData(String item, Float cost,String category)
     {
         // id should auto increment
         SQLiteDatabase db = this.getWritableDatabase();

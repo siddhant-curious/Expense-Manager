@@ -30,11 +30,16 @@ import java.util.TimeZone;
 public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     DatabaseHandler mydb;
-    String item_name,item_cost,item_category;
-    List<String> itemNamesList;
-    ArrayList itemDetails;
-    Long item_date;
 
+    String item_name,item_cost,item_category;
+    //TextView TIS;
+
+    List<String> itemNamesList;
+
+    ArrayList itemDetails;
+
+    Long item_date;
+    //Float Sum;
 
     private Calendar calendar;
     public TextView dateView;
@@ -58,6 +63,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         // using dateView as both the click and show
         dateView = (TextView) findViewById(R.id.editDate);
 
+        //TIS = (TextView) findViewById(R.id.TIS);
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -65,6 +71,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
 
         //initial call to show current day values
         getDateAction(year,month,day);
+
 
 
 
@@ -101,20 +108,20 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     {
         // cursor starts from index -1 or so the error says and hence it movetonext is a must
         // as by current understanding the c is contains the row number and coloumns are being called via getColoumnIndex
-        Cursor c = mydb.getData(epoch);
 
+        Cursor c = mydb.getData(epoch);
         while(c.moveToNext()) {
 
-
             item_name = c.getString(c.getColumnIndex("item"));
-
             // to show only the names in the list view
             itemNamesList.add(item_name);
-
             // getting rest of the data from database
             item_cost = c.getString(c.getColumnIndex("cost"));
             item_category = c.getString(c.getColumnIndex("category"));
             item_date = c.getLong(c.getColumnIndex("date"));
+
+           // Sum = Sum + Float.parseFloat(item_cost);
+
 
             String temp = String.valueOf(item_date);
             // item_date contains the epoch time
@@ -128,6 +135,8 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             ItemDetails itobj = new ItemDetails();
             itobj.setItemName(item_name);
             itobj.setDate(formatted);
+
+            // showing epoch time in cateogry for debugging purposes
             itobj.setItemCategory(temp);
             itobj.setItemCost(item_cost);
 
@@ -141,6 +150,8 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         ListView listView = (ListView) findViewById(R.id.data_list);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
+      // Log.v("msg","total sum is"+Sum);
+      //  TIS.setText(String.valueOf(Sum));
     }
 
 

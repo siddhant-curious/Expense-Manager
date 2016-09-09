@@ -43,7 +43,12 @@
         android:onClick="setDate"
         android:id="@+id/editDate"/>
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:textSize="12sp"
+        android:id="@+id/todayIS" />
 
 
     <ListView

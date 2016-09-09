@@ -46,7 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertData(String item, Float cost,String category)
+    public boolean insertData(String item, Double cost,String category)
     {
         // id should auto increment
         SQLiteDatabase db = this.getWritableDatabase();

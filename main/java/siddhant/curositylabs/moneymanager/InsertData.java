@@ -15,7 +15,7 @@ public class InsertData extends AppCompatActivity {
     EditText item_name_input, item_cost_input, item_category_input;
     DatabaseHandler mydb;
     String item_name,item_category;
-    Float item_cost;
+    Double item_cost;
     boolean status;
 
     @Override
@@ -55,7 +55,7 @@ public class InsertData extends AppCompatActivity {
             return false;
         }
 
-        item_cost = Float.parseFloat(item_cost_input.getText().toString());
+        item_cost = Double.parseDouble(item_cost_input.getText().toString());
 
         status=mydb.insertData(item_name, item_cost, item_category);
 

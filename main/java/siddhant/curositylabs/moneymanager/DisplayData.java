@@ -30,16 +30,12 @@ import java.util.TimeZone;
 public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     DatabaseHandler mydb;
-
     String item_name,item_cost,item_category;
-    //TextView TIS;
-
+    TextView TodayISpent;
     List<String> itemNamesList;
-
     ArrayList itemDetails;
-
     Long item_date;
-    //Float Sum;
+    Double Sum;
 
     private Calendar calendar;
     public TextView dateView;
@@ -63,7 +59,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         // using dateView as both the click and show
         dateView = (TextView) findViewById(R.id.editDate);
 
-        //TIS = (TextView) findViewById(R.id.TIS);
+        TodayISpent = (TextView) findViewById(R.id.todayIS);
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -108,7 +104,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     {
         // cursor starts from index -1 or so the error says and hence it movetonext is a must
         // as by current understanding the c is contains the row number and coloumns are being called via getColoumnIndex
-
+        Sum = 0.0;
         Cursor c = mydb.getData(epoch);
         while(c.moveToNext()) {
 
@@ -120,9 +116,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             item_category = c.getString(c.getColumnIndex("category"));
             item_date = c.getLong(c.getColumnIndex("date"));
 
-           // Sum = Sum + Float.parseFloat(item_cost);
-
-
+            Sum = Sum + Double.parseDouble(item_cost);
             String temp = String.valueOf(item_date);
             // item_date contains the epoch time
             // need to convert the epoch time to string
@@ -130,12 +124,10 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             //format.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); if need to set a specific time
             String formatted = format.format(date);
-
             // passing all the details to a class (custom data structure) like struct
             ItemDetails itobj = new ItemDetails();
             itobj.setItemName(item_name);
             itobj.setDate(formatted);
-
             // showing epoch time in cateogry for debugging purposes
             itobj.setItemCategory(temp);
             itobj.setItemCost(item_cost);
@@ -151,7 +143,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
       // Log.v("msg","total sum is"+Sum);
-      //  TIS.setText(String.valueOf(Sum));
+        TodayISpent.setText("Today I Spent "+String.valueOf(Sum));
     }
 
 

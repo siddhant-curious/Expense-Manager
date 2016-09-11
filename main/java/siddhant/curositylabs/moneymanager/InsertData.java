@@ -3,6 +3,9 @@ package siddhant.curositylabs.moneymanager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,10 +25,10 @@ public class InsertData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_data);
-
         mydb= new DatabaseHandler(this);
 
     }
+
 
     public boolean insertItem(View v)
     {
@@ -64,11 +67,14 @@ public class InsertData extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Item Added",Toast.LENGTH_SHORT).show();
             Intent ne = new Intent(InsertData.this,DisplayData.class);
             startActivity(ne);
+            finish();
         }
         else
         {
             Toast.makeText(getApplicationContext(),"Error! Item Couldn't be added",Toast.LENGTH_SHORT).show();
         }
+
+
 
         return true;
     }

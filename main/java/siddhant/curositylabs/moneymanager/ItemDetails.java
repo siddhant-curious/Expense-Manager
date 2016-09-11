@@ -9,6 +9,11 @@ public class ItemDetails {
 
     String ItemName,ItemCategory,Date;
     String ItemCost;
+    int PrimaryKey;
+
+    public void setPrimayKkey(int PrimaryKey) {
+        this.PrimaryKey = PrimaryKey;
+    }
 
     public void setItemName(String ItemName)
     {
@@ -48,6 +53,10 @@ public class ItemDetails {
     public String getDate()
     {
         return Date;
+    }
+
+    public int getPrimaryKey() {
+        return  PrimaryKey;
     }
 
 }

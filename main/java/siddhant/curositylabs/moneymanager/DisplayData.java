@@ -1,8 +1,5 @@
 package siddhant.curositylabs.moneymanager;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +7,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class DisplayData extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -36,6 +33,8 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     ArrayList itemDetails;
     Long item_date;
     Double Sum;
+    int primaryKey;
+
 
     private Calendar calendar;
     public TextView dateView;
@@ -54,6 +53,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
                 // Click action
                 Intent intent = new Intent(DisplayData.this, InsertData.class);
                 startActivity(intent);
+                finish();
             }
         });
         // using dateView as both the click and show
@@ -69,14 +69,37 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
         getDateAction(year,month,day);
 
 
+    }
 
-
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.maindisplay_menu, menu);
+        return true;
     }
 
     public void getDateAction(int year,int month,int day) {
 
+
+
         showDate(year, month+1, day);
+        this.year = year;
+        this.month = month;
+        this.day = day;
+
+
+//        try {
+//            Intent returned = getIntent();
+//            Log.d("intent","Day "+returned);
+//            month = returned.getIntExtra("month",month);
+//            day = returned.getIntExtra("day",day);
+//            year = returned.getIntExtra("year",year);
+//            Log.d("revived2","Day "+day);
+//            Log.d("revived2","Month "+month);
+//            Log.d("revived2","Year "+year);
+//        }
+//        catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
         String str = "" + (month+1) + " " + day + " " + year + " 0:0:0.0 UTC";
         SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy HH:mm:ss.SSS zzz");
         Date date1 =null;
@@ -112,6 +135,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             // to show only the names in the list view
             itemNamesList.add(item_name);
             // getting rest of the data from database
+            primaryKey = Integer.parseInt(c.getString(c.getColumnIndex("id")));
             item_cost = c.getString(c.getColumnIndex("cost"));
             item_category = c.getString(c.getColumnIndex("category"));
             item_date = c.getLong(c.getColumnIndex("date"));
@@ -131,13 +155,12 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
             // showing epoch time in cateogry for debugging purposes
             itobj.setItemCategory(temp);
             itobj.setItemCost(item_cost);
+            itobj.setPrimayKkey(primaryKey);
 
             itemDetails.add(itobj);
 
 
         }
-
-
         ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.activity_list_display_data, itemNamesList);
         ListView listView = (ListView) findViewById(R.id.data_list);
         listView.setOnItemClickListener(this);
@@ -155,21 +178,30 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getApplicationContext(), "Clicked "+ itemNamesList.get(position), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Clicked "+ itemNamesList.get(position), Toast.LENGTH_SHORT).show();
+
 
         ItemDetails specific_detail = (ItemDetails) itemDetails.get(position);
+        Toast.makeText(getApplicationContext(),"Primary Key is "+specific_detail.getPrimaryKey(),Toast.LENGTH_SHORT).show();
 
         Intent showDetails = new Intent(this, showDetailsItem.class);
 
         Bundle dataBundle = new Bundle();
+
+        dataBundle.putInt("PrimaryKey",specific_detail.getPrimaryKey());
         dataBundle.putString("ItemName", specific_detail.getItemName());
         dataBundle.putString("ItemCost", specific_detail.getItemCost());
         dataBundle.putString("ItemCategory", specific_detail.getItemCategory());
         dataBundle.putString("ItemDate", specific_detail.getDate());
-
+        dataBundle.putInt("day",day);
+        Log.d("send","Day "+day);
+        dataBundle.putInt("month",month);
+        Log.d("send","Month "+month);
+        dataBundle.putInt("year",year);
+        Log.d("send","Year "+year);
         showDetails.putExtras(dataBundle);
-
         startActivity(showDetails);
+        finish();
     }
 
     private void showDate(int year, int month, int day) {
@@ -181,7 +213,7 @@ public class DisplayData extends AppCompatActivity implements AdapterView.OnItem
     {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
-        Toast.makeText(getApplicationContext(),"Hello",Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(),"Hello",Toast.LENGTH_SHORT).show();
     }
 
 }

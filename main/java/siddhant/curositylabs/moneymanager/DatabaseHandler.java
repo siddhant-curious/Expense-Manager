@@ -79,7 +79,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, null, null);
         return true;
+    }
 
+    public boolean deleteItem(int primary){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME,"id="+primary,null);
+        //db.rawQuery("delete from " + TABLE_NAME + " where id=" + primary,null);
+        return true;
     }
 
 
